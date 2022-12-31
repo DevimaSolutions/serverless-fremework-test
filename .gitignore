@@ -1,0 +1,18 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# esbuild directories
+.esbuild
+
+# dynamodb directories
+.dynamodb
+
+# .vscode
+.vscode
+
+#Env file
+.env

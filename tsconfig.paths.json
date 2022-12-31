@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@functions": ["./functions/index"],
+      "@services": ["./services/index"],
+      "@repositories": ["./repositories/index"],
+      "@entities": ["./database/entities/index"],
+      "@models": ["./database/models/index"],
+      "@database": ["./database/connection"],
+      "@requests": ["./types/requests/index"],
+      "@responses": ["./types/responses/index"],
+      "@utils": ["./utils/index"],
+      "@middlewares": ["./middlewares/index"],
+      "@constants": ["./constants/index"],
+      "@validations": ["./validations/index"],
+      "@dto-creators": ["./dto-creators/index"],
+      "@dto": ["./types/dto/index"],
+      "@enums": ["./enums/index"]
+    }
+  }
+}
