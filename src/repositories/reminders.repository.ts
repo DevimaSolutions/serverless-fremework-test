@@ -85,7 +85,7 @@ const getListByTime = async (
   };
 };
 
-const deleteOne = async (reminderId: string) =>
+const deleteOneById = async (reminderId: string) =>
   connection
     .delete({
       TableName: table,
@@ -93,6 +93,6 @@ const deleteOne = async (reminderId: string) =>
     })
     .promise();
 
-const remindersRepository = { create, update, getOne, deleteOne, getList, getListByTime };
+const remindersRepository = { create, update, getOne, deleteOneById, getList, getListByTime };
 
 export default remindersRepository;

@@ -1,7 +1,4 @@
-import { ReminderTypeEnum } from '@enums';
-import { date, number, object, string } from 'yup';
-
-import { paginationSchema } from './pagination';
+import { date, object, string } from 'yup';
 
 export const reminderIdSchema = object()
   .shape({
@@ -12,25 +9,13 @@ export const reminderIdSchema = object()
 export const createReminderSchema = object()
   .shape({
     title: string().required(),
-    reminderType: number()
-      .oneOf([ReminderTypeEnum.Email, ReminderTypeEnum.Phone])
-      .default(ReminderTypeEnum.Email),
-    sendDate: date().required(),
+    sendDate: date().required().min(new Date()),
   })
   .noUnknown();
 
 export const updateReminderSchema = object()
   .shape({
     title: string(),
-    reminderType: number().oneOf([ReminderTypeEnum.Email, ReminderTypeEnum.Phone]),
-    sendDate: date(),
-  })
-  .noUnknown();
-
-export const reminderListSchema = paginationSchema
-  .shape({
-    reminderType: number()
-      .oneOf([ReminderTypeEnum.Email, ReminderTypeEnum.Phone])
-      .default(ReminderTypeEnum.Email),
+    sendDate: date().min(new Date()),
   })
   .noUnknown();

@@ -1,11 +1,16 @@
-import type { AWS } from '@serverless/typescript';
 import { reminderFunctions, scheduledFunctions } from '@functions';
 import { reminderModel } from '@models';
-import { config } from 'dotenv';
-config();
+import { envUtil } from '@utils';
+import * as AWS from 'aws-sdk';
 
-const serverlessConfiguration: AWS = {
-  service: 'aws-serverless-typescript-api',
+import type { AWS as awsType } from '@serverless/typescript';
+
+const configData = envUtil.getEnv().aws;
+
+AWS.config.update(configData);
+
+const serverlessConfiguration: awsType = {
+  service: 'reminders-api',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-dynamodb-local', 'serverless-offline'],
   provider: {
@@ -21,8 +26,6 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { ...reminderFunctions, ...scheduledFunctions },
-  package: { individually: true },
   custom: {
     esbuild: {
       bundle: true,
@@ -43,6 +46,9 @@ const serverlessConfiguration: AWS = {
       stages: 'dev',
     },
   },
+  functions: { ...reminderFunctions, ...scheduledFunctions },
+  package: { individually: true },
+
   resources: {
     Resources: { ...reminderModel },
   },

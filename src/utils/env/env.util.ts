@@ -1,5 +1,10 @@
+import { config } from 'dotenv';
+
+import { envSchema } from './schema';
+
 import type { IEnv } from './env.type';
 
+config();
 const mapEnvValues = {
   bool: (envValue: string) => envValue === 'true',
   number: (envValue: string, defaultValue: number) => {
@@ -19,17 +24,21 @@ const mapEnvValues = {
 const mapEnv = () => {
   const parsed: IEnv = {
     aws: {
-      apiVersion: process.env.AWS_API_VERSION || '',
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-      region: process.env.AWS_REGION || '',
+      apiVersion: process.env.AWS_API_VERSION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION,
+    },
+    awsDatabase: {
+      apiVersion: process.env.AWS_DATABASE_API_VERSION,
+      endpoint: process.env.AWS_DATABASE_ENDPOINT,
     },
     recipient: {
-      recipientEmails: mapEnvValues.array(process.env.RECIPIENT_EMAIL || ''),
+      recipientEmails: mapEnvValues.array(process.env.RECIPIENT_EMAIL ?? ''),
     },
     mailer: {
-      senderEmail: process.env.SENDER_EMAIL || '',
-      apiVersion: process.env.MAILER_AWS_API_VERSION || '',
+      senderEmail: process.env.SENDER_EMAIL,
+      apiVersion: process.env.MAILER_AWS_API_VERSION,
     },
   };
 
@@ -40,6 +49,7 @@ let env: IEnv;
 export const getEnv = (): Readonly<IEnv> => {
   if (!env) {
     env = mapEnv();
+    envSchema.validateSync(env);
   }
   return env;
 };

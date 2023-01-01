@@ -7,7 +7,8 @@ import type { ICreateReminderRequest } from '@requests';
 import type { IReminderResponse } from '@responses';
 
 export const createReminderResponse = (reminder: IReminderAttributes): IReminderResponse => ({
-  ...reminder,
+  id: reminder.id,
+  title: reminder.title,
   sendDate: new Date(reminder.sendDate),
   createdAt: new Date(reminder.createdAt),
   updatedAt: new Date(reminder.updatedAt),

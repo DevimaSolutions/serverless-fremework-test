@@ -1,11 +1,12 @@
 import { successMessages } from '@constants';
+import { ReminderTypeEnum } from '@enums';
 import { middyfy } from '@middlewares';
 import { remindersCrudService } from '@services';
 import {
   createReminderSchema,
   updateReminderSchema,
   reminderIdSchema,
-  reminderListSchema,
+  paginationSchema,
 } from '@validations';
 
 import type { IPaginationResponse, IReminderResponse, ISuccessResponse } from '@responses';
@@ -14,7 +15,10 @@ import type { APIGatewayProxyEvent } from 'aws-lambda';
 export const createReminder = middyfy(
   async (event: APIGatewayProxyEvent): Promise<IReminderResponse> => {
     const validatedBody = await createReminderSchema.validate(event.body);
-    return remindersCrudService.createReminder(validatedBody);
+    return remindersCrudService.createReminder({
+      ...validatedBody,
+      reminderType: ReminderTypeEnum.Email,
+    });
   },
 );
 
@@ -36,8 +40,11 @@ export const deleteReminder = middyfy(
 
 export const getRemindersList = middyfy(
   async (event: APIGatewayProxyEvent): Promise<IPaginationResponse<IReminderResponse[]>> => {
-    const filter = await reminderListSchema.validate(event.queryStringParameters ?? {});
-    return remindersCrudService.getRemindersList(filter);
+    const filter = await paginationSchema.validate(event.queryStringParameters ?? {});
+    return remindersCrudService.getRemindersList({
+      ...filter,
+      reminderType: ReminderTypeEnum.Email,
+    });
   },
 );
 

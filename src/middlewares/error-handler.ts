@@ -7,20 +7,28 @@ const errorHandler = {
     if (handler.error instanceof ClientError) {
       return {
         statusCode: handler.error.statusCode,
-        body: JSON.stringify(handler.error.body),
+        body: JSON.stringify({
+          error: handler.error.message,
+          statusCode: handler.error.statusCode,
+          payload: handler.error.payload,
+        }),
       };
     }
     if (handler.error instanceof ValidationError) {
       return {
         statusCode: 400,
-        body: JSON.stringify(handler.error),
+        body: JSON.stringify({
+          error: handler.error.message,
+          statusCode: 400,
+          payload: handler.error,
+        }),
       };
     }
     //TODO: Add logger
     console.log(handler.error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: errorMessages.internalError }),
+      body: JSON.stringify({ message: errorMessages.internalError, statusCode: 500, payload: {} }),
     };
   },
 };

@@ -24,7 +24,7 @@ const updateReminder = async (
     reminderDtoCreators.toDbUpdateObject(payload),
   );
   if (!updatedReminder.Attributes) {
-    throw new ClientError(errorMessages.notExists('Reminder'));
+    throw new ClientError(errorMessages.notExists('Reminder'), 403);
   }
   return reminderDtoCreators.createReminderResponse(
     updatedReminder.Attributes as IReminderAttributes,
@@ -32,7 +32,7 @@ const updateReminder = async (
 };
 
 const deleteReminder = async (reminderId: string): Promise<void> => {
-  await remindersRepository.deleteOne(reminderId);
+  await remindersRepository.deleteOneById(reminderId);
 };
 
 const getRemindersList = async (
@@ -60,7 +60,7 @@ const getRemindersList = async (
 const getReminderById = async (reminderId: string): Promise<IReminderResponse> => {
   const reminder = await remindersRepository.getOne(reminderId);
   if (!reminder.Item) {
-    throw new ClientError(errorMessages.notExists('Reminder'));
+    throw new ClientError(errorMessages.notExists('Reminder'), 403);
   }
   return reminderDtoCreators.createReminderResponse(reminder.Item as IReminderAttributes);
 };

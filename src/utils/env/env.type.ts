@@ -4,7 +4,10 @@ export interface IAwsConfigs {
   secretAccessKey: string;
   region: string;
 }
-
+export interface IAwsDatabaseConfigs {
+  apiVersion: string;
+  endpoint: string;
+}
 export interface IRecipientConfigs {
   recipientEmails: string[];
 }
@@ -15,6 +18,7 @@ export interface IMailerConfigs {
 
 export interface IEnv {
   aws: IAwsConfigs;
+  awsDatabase: IAwsDatabaseConfigs;
   recipient: IRecipientConfigs;
   mailer: IMailerConfigs;
 }

@@ -9,7 +9,7 @@ import type { IReminderAttributes } from '@entities';
 const env = envUtil.getEnv();
 
 const reminderHandlers = {
-  [ReminderTypeEnum.Email]: (reminder: IReminderAttributes) => {
+  [ReminderTypeEnum.Email]: async (reminder: IReminderAttributes) => {
     mailingService.sendEmail(
       reminderDtoCreators.toEmailObject(env.recipient.recipientEmails, reminder),
     );
@@ -24,13 +24,19 @@ const reminderHandlers = {
 const sendEvents = async () => {
   let cursor = null;
   const limit = 100;
-
   const filterKey = timeUtil.getMinutelyTimeStamp(new Date());
 
   do {
     const reminders = await remindersRepository.getListByTime(filterKey, limit, cursor);
-
-    await Promise.all(reminders.items.map((item) => reminderHandlers[item.reminderType](item)));
+    for (const reminder of reminders.items) {
+      try {
+        await reminderHandlers[reminder.reminderType](reminder);
+        await remindersRepository.deleteOneById(reminder.id);
+      } catch (e) {
+        //TODO add logger
+        console.log(e);
+      }
+    }
     cursor = reminders.cursor ?? null;
   } while (cursor);
 };

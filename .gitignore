@@ -16,3 +16,6 @@ jspm_packages
 
 #Env file
 .env
+
+#Husky 
+.husky
