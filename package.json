@@ -8,7 +8,8 @@
     "setup:husky": "rimraf .husky/pre-commit .husky/pre-push && husky add .husky/pre-commit \"npx lint-staged\" && husky add .husky/pre-push \"npx tsc --noEmit\"",
     "setup": "yarn setup:husky && cpy --rename=.env example.env ./",
     "lint:fix": "eslint --fix --ext .js,.ts src",
-    "dev": "serverless offline start"
+    "dev": "serverless offline start",
+    "docs": "serverless openapi generate -o openapi.json -f json -a 3.0.3 -p postman.json"
   },
   "engines": {
     "node": ">=14.15.0"
@@ -19,6 +20,7 @@
     "@middy/http-json-body-parser": "^4.0.9",
     "aws-lambda": "^1.0.7",
     "eslint-plugin-prettier": "^4.2.1",
+    "remove": "^0.1.5",
     "serverless-dynamodb-local": "^0.2.40",
     "uuid": "^9.0.0",
     "yup": "^0.32.11"
@@ -38,12 +40,12 @@
     "eslint-plugin-import": "^2.26.0",
     "husky": "^8.0.2",
     "install": "^0.13.0",
-    "lint-staged": "^13.1.0",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "serverless": "^3.0.0",
     "serverless-esbuild": "^1.23.3",
     "serverless-offline": "^12.0.3",
+    "serverless-openapi-documenter": "^0.0.40",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.9.4"

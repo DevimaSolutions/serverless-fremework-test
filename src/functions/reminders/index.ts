@@ -1,3 +1,10 @@
+import {
+  createReminderDocumentation,
+  getReminderDocumentation,
+  deleteReminderDocumentation,
+  updateReminderDocumentation,
+  getRemindersListDocumentation,
+} from '@docs';
 import { handlerPath } from '@utils';
 
 export const createReminder = {
@@ -8,6 +15,7 @@ export const createReminder = {
       http: {
         method: 'post',
         path: 'reminders',
+        documentation: createReminderDocumentation,
       },
     },
   ],
@@ -21,6 +29,7 @@ export const updateReminder = {
       http: {
         method: 'put',
         path: 'reminders/{reminderId}',
+        documentation: updateReminderDocumentation,
       },
     },
   ],
@@ -34,6 +43,7 @@ export const deleteReminder = {
       http: {
         method: 'delete',
         path: 'reminders/{reminderId}',
+        documentation: deleteReminderDocumentation,
       },
     },
   ],
@@ -47,6 +57,7 @@ export const getRemindersList = {
       http: {
         method: 'get',
         path: 'reminders',
+        documentation: getRemindersListDocumentation,
       },
     },
   ],
@@ -60,6 +71,7 @@ export const getReminderById = {
       http: {
         method: 'get',
         path: 'reminders/{reminderId}',
+        documentation: getReminderDocumentation,
       },
     },
   ],

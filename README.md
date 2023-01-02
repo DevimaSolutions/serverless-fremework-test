@@ -19,3 +19,12 @@ Run the development server:
 ```bash
 yarn dev
 ```
+
+## Documentation
+To create a documentation for api please run:
+
+```bash
+yarn docs
+```
+
+In project root directory will be generated openapi.json and postman.json files

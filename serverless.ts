@@ -1,3 +1,13 @@
+import {
+  reminderResponseModel,
+  remindersListResponseModel,
+  createReminderRequestModel,
+  updateReminderRequestModel,
+  notFoundErrorModel,
+  baseServerErrorModel,
+  validationErrorModel,
+  baseSuccessModel,
+} from '@docs';
 import { reminderFunctions, scheduledFunctions } from '@functions';
 import { reminderModel } from '@models';
 import { envUtil } from '@utils';
@@ -12,7 +22,12 @@ AWS.config.update(configData);
 const serverlessConfiguration: awsType = {
   service: 'reminders-api',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-dynamodb-local', 'serverless-offline'],
+  plugins: [
+    'serverless-esbuild',
+    'serverless-dynamodb-local',
+    'serverless-offline',
+    'serverless-openapi-documenter',
+  ],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -44,6 +59,21 @@ const serverlessConfiguration: awsType = {
         migrate: true,
       },
       stages: 'dev',
+    },
+    documentation: {
+      version: '1',
+      title: 'Reminders API',
+      description: 'Reminders API',
+      models: [
+        reminderResponseModel,
+        remindersListResponseModel,
+        createReminderRequestModel,
+        updateReminderRequestModel,
+        notFoundErrorModel,
+        baseServerErrorModel,
+        validationErrorModel,
+        baseSuccessModel,
+      ],
     },
   },
   functions: { ...reminderFunctions, ...scheduledFunctions },
