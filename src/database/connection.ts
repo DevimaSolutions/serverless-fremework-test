@@ -10,14 +10,11 @@ const getDynamoDBClient = (): DocumentClient => {
   if (connection) {
     return connection;
   }
-  if (Boolean(process.env.IS_OFFLINE)) {
-    connection = new AWS.DynamoDB.DocumentClient({
-      ...env.aws,
-      ...env.awsDatabase,
-    });
-  } else {
-    connection = new AWS.DynamoDB.DocumentClient({ ...env.aws, ...env.awsDatabase });
-  }
+  connection = new AWS.DynamoDB.DocumentClient({
+    ...env.aws,
+    ...env.awsDatabase,
+  });
+
   return connection;
 };
 

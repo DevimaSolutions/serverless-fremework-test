@@ -8,14 +8,18 @@ export const reminderIdSchema = object()
 
 export const createReminderSchema = object()
   .shape({
-    title: string().required(),
-    sendDate: date().required().min(new Date()),
+    title: string().required().max(1000),
+    sendDate: date().test('sendDate', 'sendDate must be in the future', function () {
+      return new Date(this.parent.sendDate).getTime() > Date.now();
+    }),
   })
   .noUnknown();
 
 export const updateReminderSchema = object()
   .shape({
     title: string(),
-    sendDate: date().min(new Date()),
+    sendDate: date().test('sendDate', 'sendDate must be in the future', function () {
+      return new Date(this.parent.sendDate).getTime() > Date.now();
+    }),
   })
   .noUnknown();

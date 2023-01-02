@@ -1,4 +1,9 @@
-const getMinutelyTimeStamp = (date: Date) => new Date(date.setSeconds(0)).setMilliseconds(0);
+const getMinutelyTimeStamp = (date: Date) => {
+  const resultDate = new Date(date);
+  resultDate.setSeconds(0);
+  resultDate.setMilliseconds(0);
+  return resultDate.getTime();
+};
 
 const timeUtil = { getMinutelyTimeStamp };
 

@@ -1,6 +1,6 @@
-import type { UpdatePayload } from 'database/types';
+import type { IUpdatePayload } from 'database/types';
 
-const getUpdatingMeta = <T extends object>(payload: T): UpdatePayload => {
+const getUpdatingMeta = <T extends object>(payload: T): IUpdatePayload => {
   let updateExpression = 'set ';
   let expressionAttributeValues = {};
   for (const key in payload) {

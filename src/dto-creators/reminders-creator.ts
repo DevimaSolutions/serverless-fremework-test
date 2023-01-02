@@ -15,7 +15,7 @@ export const createReminderResponse = (reminder: IReminderAttributes): IReminder
 });
 
 export const createRemindersResponse = (reminders: IReminderAttributes[]): IReminderResponse[] =>
-  reminders.map((item) => createReminderResponse(item));
+  reminders.map(createReminderResponse);
 
 export const toDbObject = (reminder: ICreateReminderRequest): IReminderAttributes => ({
   id: v4(),

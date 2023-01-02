@@ -2,9 +2,10 @@ import { databaseConstants } from '@constants';
 import getDynamoDBClient from '@database';
 import { databaseUtil } from '@utils';
 
+import type { IRepositoryPaginated } from '@dto';
 import type { IReminderAttributes } from '@entities';
 import type { ReminderTypeEnum } from '@enums';
-import type { Cursor } from 'database/types';
+import type { ICursor } from 'database/types';
 
 const connection = getDynamoDBClient();
 
@@ -39,8 +40,8 @@ const getOne = async (reminderId: string) =>
 const getList = async (
   type: ReminderTypeEnum,
   limit = 100,
-  cursor?: Cursor | null,
-): Promise<{ items: IReminderAttributes[]; cursor: Cursor }> => {
+  cursor?: ICursor | null,
+): Promise<{ items: IReminderAttributes[]; cursor: ICursor }> => {
   const params = {
     TableName: table,
     Limit: limit,
@@ -64,8 +65,8 @@ const getList = async (
 const getListByTime = async (
   sendKey: number,
   limit = 100,
-  cursor?: Cursor | null,
-): Promise<{ items: IReminderAttributes[]; cursor: Cursor }> => {
+  cursor?: ICursor | null,
+): Promise<IRepositoryPaginated<IReminderAttributes[]>> => {
   const queryParams = {
     TableName: table,
     IndexName: databaseConstants.databaseIndexName.timeIndex,

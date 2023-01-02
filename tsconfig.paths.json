@@ -17,7 +17,8 @@
       "@dto-creators": ["./dto-creators/index"],
       "@dto": ["./types/dto/index"],
       "@enums": ["./enums/index"],
-      "@docs": ["./documentation/index"]
+      "@docs": ["./documentation/index"],
+      "@errors": ["./errors/index"]
     }
   }
 }
