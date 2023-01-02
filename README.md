@@ -7,6 +7,12 @@ yarn install
 yarn setup
 ```
 
+Second, install database:
+
+```bash
+npx serverless dynamodb install
+```
+
 Now you have `.env` file in working directory
 Fill missing values according to the comments before running the project
 

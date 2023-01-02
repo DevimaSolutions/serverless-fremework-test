@@ -55,7 +55,7 @@ const serverlessConfiguration: awsType = {
     dynamodb: {
       start: {
         port: 5000,
-        inMemory: true,
+        inMemory: false,
         migrate: true,
       },
       stages: 'dev',

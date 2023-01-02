@@ -1,4 +1,4 @@
 export const errorMessages = {
   internalError: 'Internal server error',
-  notExists: (name) => `${name} is not exist`,
+  notExists: (name) => `${name} does not exist`,
 };
