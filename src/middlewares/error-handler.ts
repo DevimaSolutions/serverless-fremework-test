@@ -5,6 +5,8 @@ import { ValidationError } from 'yup';
 
 import type { IErrorResponseBody } from '@responses';
 
+const logger = debug('app:error');
+
 const errorHandler = {
   onError: (handler) => {
     const { error } = handler;
@@ -31,7 +33,7 @@ const errorHandler = {
     }
 
     // This is internal server error
-    debug(responseBody.error);
+    logger(responseBody.error);
     return {
       statusCode: responseBody.statusCode,
       body: JSON.stringify(responseBody),

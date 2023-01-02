@@ -5,7 +5,6 @@ const env = envUtil.getEnv();
 
 const createAwsEmail = (mail: IMail) => ({
   Destination: {
-    CcAddresses: [env.mailer.senderEmail],
     ToAddresses: mail.recipients,
   },
   Message: {
@@ -18,14 +17,10 @@ const createAwsEmail = (mail: IMail) => ({
             },
           }
         : {}),
-      ...(mail.htmlContent
-        ? {
-            Text: {
-              Charset: 'UTF-8',
-              Data: mail.textContent,
-            },
-          }
-        : {}),
+      Text: {
+        Charset: 'UTF-8',
+        Data: mail.textContent ?? '',
+      },
     },
     Subject: {
       Charset: 'UTF-8',

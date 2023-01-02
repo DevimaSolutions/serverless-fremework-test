@@ -13,14 +13,15 @@ import type { IPaginationResponse, IReminderResponse } from '@responses';
 
 const env = envUtil.getEnv();
 
+const logger = debug('app:error');
+
 const reminderHandlers = {
   [ReminderTypeEnum.Email]: async (reminder: IReminderAttributes) =>
     mailingService.sendEmail(
       reminderDtoCreators.toEmailObject(env.recipient.recipientEmails, reminder),
     ),
-  [ReminderTypeEnum.Phone]: (reminder: IReminderAttributes) => {
-    debug(reminder.title);
-    debug('Not implemented yet');
+  [ReminderTypeEnum.Phone]: () => {
+    throw new Error('Not implemented yet');
   },
 };
 
@@ -36,7 +37,7 @@ const sendEvents = async () => {
         await reminderHandlers[reminder.reminderType](reminder);
         await remindersRepository.deleteOneById(reminder.id);
       } catch (e) {
-        debug(e);
+        logger(e);
       }
     }
     cursor = reminders.cursor ?? null;
