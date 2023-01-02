@@ -14,11 +14,10 @@ import type { IPaginationResponse, IReminderResponse } from '@responses';
 const env = envUtil.getEnv();
 
 const reminderHandlers = {
-  [ReminderTypeEnum.Email]: async (reminder: IReminderAttributes) => {
+  [ReminderTypeEnum.Email]: async (reminder: IReminderAttributes) =>
     mailingService.sendEmail(
       reminderDtoCreators.toEmailObject(env.recipient.recipientEmails, reminder),
-    );
-  },
+    ),
   [ReminderTypeEnum.Phone]: (reminder: IReminderAttributes) => {
     debug(reminder.title);
     debug('Not implemented yet');
