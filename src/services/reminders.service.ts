@@ -25,6 +25,15 @@ const reminderHandlers = {
   },
 };
 
+const sendEvent = async (reminder: IReminderAttributes) => {
+  try {
+    await reminderHandlers[reminder.reminderType](reminder);
+    await remindersRepository.deleteOneById(reminder.id);
+  } catch (e) {
+    logger(e);
+  }
+};
+
 const sendEvents = async () => {
   let cursor = null;
   const limit = 100;
@@ -32,14 +41,8 @@ const sendEvents = async () => {
 
   do {
     const reminders = await remindersRepository.getListByTime(filterKey, limit, cursor);
-    for (const reminder of reminders.items) {
-      try {
-        await reminderHandlers[reminder.reminderType](reminder);
-        await remindersRepository.deleteOneById(reminder.id);
-      } catch (e) {
-        logger(e);
-      }
-    }
+    await Promise.all(reminders.items.map(sendEvent));
+
     cursor = reminders.cursor ?? null;
   } while (cursor);
 };
