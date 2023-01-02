@@ -16,7 +16,8 @@
       "@validations": ["./validations/index"],
       "@dto-creators": ["./dto-creators/index"],
       "@dto": ["./types/dto/index"],
-      "@enums": ["./enums/index"]
+      "@enums": ["./enums/index"],
+      "@docs": ["./documentation/index"]
     }
   }
 }

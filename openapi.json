@@ -1,0 +1,536 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Reminders API",
+    "description": "Reminders API",
+    "version": "1"
+  },
+  "components": {
+    "schemas": {
+      "CreateReminderRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "sendDate": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "title",
+          "sendDate"
+        ]
+      },
+      "ReminderResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sendDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "object",
+                "properties": {
+                  "sendDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              },
+              "path": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "errors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "originalValue": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                }
+              },
+              "inner": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "name": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "currentRoute": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "existingRoutes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "statusCode": {
+            "type": "integer"
+          }
+        }
+      },
+      "BaseServerError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object"
+          }
+        }
+      },
+      "reminderId": {
+        "type": "string"
+      },
+      "UpdateReminderRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "sendDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "BaseSuccess": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "cursor": {
+        "type": "string"
+      },
+      "RemindersListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "sendDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/reminders": {
+      "post": {
+        "summary": "Create Reminder",
+        "description": "Creates a reminder to send",
+        "operationId": "reminders-api-dev-createReminder",
+        "parameters": [],
+        "tags": [],
+        "requestBody": {
+          "description": "Creating reminder params object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReminderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A created reminder object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReminderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Base server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get reminders list",
+        "description": "Get reminders list",
+        "operationId": "reminders-api-dev-getRemindersList",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit of params per page",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Cursor of the last item",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/cursor"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "List of paginated reminders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemindersListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Base server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reminders/{reminderId}": {
+      "put": {
+        "summary": "Update reminder",
+        "description": "Updates a reminder to send",
+        "operationId": "reminders-api-dev-updateReminder",
+        "parameters": [
+          {
+            "name": "reminderId",
+            "in": "path",
+            "description": "Reminder id path param",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/reminderId"
+            }
+          }
+        ],
+        "tags": [],
+        "requestBody": {
+          "description": "A update reminder params object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReminderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A updated reminder object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReminderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Base server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete reminder",
+        "description": "Delete a reminder to send",
+        "operationId": "reminders-api-dev-deleteReminder",
+        "parameters": [
+          {
+            "name": "reminderId",
+            "in": "path",
+            "description": "Reminder id path param",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/reminderId"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Success message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Base server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get reminder by id",
+        "description": "Get reminder by id",
+        "operationId": "reminders-api-dev-getReminderById",
+        "parameters": [
+          {
+            "name": "reminderId",
+            "in": "path",
+            "description": "Reminder id path param",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/reminderId"
+            }
+          }
+        ],
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "Reminder object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReminderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Base server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
