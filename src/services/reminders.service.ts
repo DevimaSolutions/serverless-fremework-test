@@ -1,13 +1,48 @@
 import { errorMessages } from '@constants';
 import { reminderDtoCreators } from '@dto-creators';
+import { ReminderTypeEnum } from '@enums';
+import { ClientError } from '@errors';
 import { remindersRepository } from '@repositories';
-import { databaseUtil } from '@utils';
-import ClientError from 'models/client-error';
+import { mailingService } from '@services';
+import { databaseUtil, timeUtil, envUtil } from '@utils';
+import debug from 'debug';
 
 import type { IReminderAttributes } from '@entities';
-import type { ReminderTypeEnum } from '@enums';
 import type { ICreateReminderRequest, IPaginationRequest, IUpdateReminderRequest } from '@requests';
 import type { IPaginationResponse, IReminderResponse } from '@responses';
+
+const env = envUtil.getEnv();
+
+const reminderHandlers = {
+  [ReminderTypeEnum.Email]: async (reminder: IReminderAttributes) => {
+    mailingService.sendEmail(
+      reminderDtoCreators.toEmailObject(env.recipient.recipientEmails, reminder),
+    );
+  },
+  [ReminderTypeEnum.Phone]: (reminder: IReminderAttributes) => {
+    debug(reminder.title);
+    debug('Not implemented yet');
+  },
+};
+
+const sendEvents = async () => {
+  let cursor = null;
+  const limit = 100;
+  const filterKey = timeUtil.getMinutelyTimeStamp(new Date());
+
+  do {
+    const reminders = await remindersRepository.getListByTime(filterKey, limit, cursor);
+    for (const reminder of reminders.items) {
+      try {
+        await reminderHandlers[reminder.reminderType](reminder);
+        await remindersRepository.deleteOneById(reminder.id);
+      } catch (e) {
+        debug(e);
+      }
+    }
+    cursor = reminders.cursor ?? null;
+  } while (cursor);
+};
 
 const createReminder = async (payload: ICreateReminderRequest): Promise<IReminderResponse> => {
   const reminder = reminderDtoCreators.toDbObject(payload);
@@ -70,6 +105,7 @@ const remindersService = {
   deleteReminder,
   getRemindersList,
   getReminderById,
+  sendEvents,
 };
 
 export default remindersService;

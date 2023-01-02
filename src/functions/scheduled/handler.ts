@@ -1,10 +1,10 @@
-import { remindersSendingService } from '@services';
+import { remindersService } from '@services';
+import debug from 'debug';
 
 export const sendReminders = async () => {
   try {
-    await remindersSendingService.sendEvents();
+    await remindersService.sendEvents();
   } catch (e) {
-    //TODO: Remove console.log and add logger
-    console.log(e);
+    debug(e);
   }
 };

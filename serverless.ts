@@ -1,3 +1,4 @@
+import { databaseConstants } from '@constants';
 import {
   reminderResponseModel,
   remindersListResponseModel,
@@ -39,7 +40,22 @@ const serverlessConfiguration: awsType = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: [
+          'dynamodb:DescribeTable',
+          'dynamodb:Query',
+          'dynamodb:Scan',
+          'dynamodb:GetItem',
+          'dynamodb:PutItem',
+          'dynamodb:DeleteItem',
+        ],
+        Resource: `arn:aws:dynamodb:${configData.region}:*:table/${databaseConstants.databaseTablesName.reminders}`,
+      },
+    ],
   },
+
   // import the function via paths
   custom: {
     esbuild: {

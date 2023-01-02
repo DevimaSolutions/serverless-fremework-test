@@ -9,7 +9,6 @@ import { handlerPath } from '@utils';
 
 export const createReminder = {
   handler: `${handlerPath(__dirname)}/handler.createReminder`,
-  timeout: 400,
   events: [
     {
       http: {
@@ -23,7 +22,6 @@ export const createReminder = {
 
 export const updateReminder = {
   handler: `${handlerPath(__dirname)}/handler.updateReminder`,
-  timeout: 400,
   events: [
     {
       http: {
@@ -37,7 +35,6 @@ export const updateReminder = {
 
 export const deleteReminder = {
   handler: `${handlerPath(__dirname)}/handler.deleteReminder`,
-  timeout: 400,
   events: [
     {
       http: {
@@ -51,7 +48,6 @@ export const deleteReminder = {
 
 export const getRemindersList = {
   handler: `${handlerPath(__dirname)}/handler.getRemindersList`,
-  timeout: 400,
   events: [
     {
       http: {
@@ -65,7 +61,6 @@ export const getRemindersList = {
 
 export const getReminderById = {
   handler: `${handlerPath(__dirname)}/handler.getReminderById`,
-  timeout: 400,
   events: [
     {
       http: {

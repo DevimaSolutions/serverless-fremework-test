@@ -1,34 +1,40 @@
 import { errorMessages } from '@constants';
-import ClientError from 'models/client-error';
+import { ClientError } from '@errors';
+import debug from 'debug';
 import { ValidationError } from 'yup';
+
+import type { IErrorResponseBody } from '@responses';
 
 const errorHandler = {
   onError: (handler) => {
-    if (handler.error instanceof ClientError) {
-      return {
-        statusCode: handler.error.statusCode,
-        body: JSON.stringify({
-          error: handler.error.message,
-          statusCode: handler.error.statusCode,
-          payload: handler.error.payload,
-        }),
-      };
-    }
-    if (handler.error instanceof ValidationError) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: handler.error.message,
-          statusCode: 400,
-          payload: handler.error,
-        }),
-      };
-    }
-    //TODO: Add logger
-    console.log(handler.error);
-    return {
+    const { error } = handler;
+
+    let responseBody: IErrorResponseBody = {
+      error: errorMessages.internalError,
       statusCode: 500,
-      body: JSON.stringify({ message: errorMessages.internalError, statusCode: 500, payload: {} }),
+      payload: {},
+    };
+
+    if (error instanceof ClientError) {
+      responseBody = {
+        error: error.message,
+        statusCode: error.statusCode,
+        payload: error.payload,
+      };
+    }
+    if (error instanceof ValidationError) {
+      responseBody = {
+        error: error.message,
+        statusCode: 400,
+        payload: error,
+      };
+    }
+
+    // This is internal server error
+    debug(responseBody.error);
+    return {
+      statusCode: responseBody.statusCode,
+      body: JSON.stringify(responseBody),
     };
   },
 };
