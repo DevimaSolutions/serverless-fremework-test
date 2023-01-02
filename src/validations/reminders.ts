@@ -9,14 +9,16 @@ export const reminderIdSchema = object()
 export const createReminderSchema = object()
   .shape({
     title: string().required().max(1000),
-    sendDate: date().required().min(new Date()),
+    sendDate: date().test('sendDate', 'sendDate must be in the future', function () {
+      return new Date(this.parent.sendDate).getTime() > Date.now();
+    }),
   })
   .noUnknown();
 
 export const updateReminderSchema = object()
   .shape({
     title: string(),
-    sendDate: date().test('sendDate', 'Start date must be greater than now', function () {
+    sendDate: date().test('sendDate', 'sendDate must be in the future', function () {
       return new Date(this.parent.sendDate).getTime() > Date.now();
     }),
   })
