@@ -33,7 +33,11 @@ const errorHandler = {
     }
 
     // This is internal server error
-    logger(responseBody.error);
+    if (responseBody.statusCode == 500) {
+      console.debug(handler.error);
+      logger(JSON.stringify(error));
+    }
+
     return {
       statusCode: responseBody.statusCode,
       body: JSON.stringify(responseBody),
