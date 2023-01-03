@@ -16,13 +16,14 @@ import * as AWS from 'aws-sdk';
 
 import type { AWS as awsType } from '@serverless/typescript';
 
-const configData = envUtil.getEnv().aws;
+const { aws, deployment } = envUtil.getEnv();
 
-AWS.config.update(configData);
+AWS.config.update(aws);
 
 const serverlessConfiguration: awsType = {
   service: 'reminders-api',
   frameworkVersion: '3',
+
   plugins: [
     'serverless-esbuild',
     'serverless-dynamodb-local',
@@ -31,9 +32,11 @@ const serverlessConfiguration: awsType = {
   ],
   provider: {
     name: 'aws',
+    stage: deployment.stage,
     runtime: 'nodejs14.x',
+    region: aws.region,
     apiGateway: {
-      minimumCompressionSize: 1024,
+      minimumCompressionSize: 512,
       shouldStartNameWithService: true,
     },
     environment: {
@@ -51,13 +54,26 @@ const serverlessConfiguration: awsType = {
           'dynamodb:PutItem',
           'dynamodb:DeleteItem',
         ],
-        Resource: `arn:aws:dynamodb:${configData.region}:*:table/${databaseConstants.databaseTablesName.reminders}`,
+        Resource: `arn:aws:dynamodb:${aws.region}:*:table/${databaseConstants.databaseTablesName.reminders}`,
       },
     ],
   },
-
+  params: {
+    default: {
+      domain: deployment.devDomain,
+    },
+    prod: {
+      domain: deployment.prodDomain,
+    },
+    dev: {
+      domain: deployment.devDomain,
+    },
+  },
   // import the function via paths
   custom: {
+    'serverless-offline': {
+      httpPort: 4000,
+    },
     esbuild: {
       bundle: true,
       minify: false,

@@ -36,7 +36,7 @@ const sendEvent = async (reminder: IReminderAttributes) => {
 
 const sendEvents = async () => {
   let cursor = null;
-  const limit = 100;
+  const limit = 30;
   const filterKey = timeUtil.getMinutelyTimeStamp(new Date());
 
   do {

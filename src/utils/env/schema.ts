@@ -1,4 +1,7 @@
 import { object, array, string } from 'yup';
+
+import { AwsRegionEnum } from './env.type';
+
 const validationMessage = (field: string, type: string) =>
   `Please enter correct ${field} field type (${type}) in .env file`;
 
@@ -13,11 +16,12 @@ const awsSchema = object().shape({
     .required(validationMessage('AWS_SECRET_ACCESS_KEY', 'string'))
     .typeError(validationMessage('AWS_SECRET_ACCESS_KEY', 'string')),
   region: string()
+    .oneOf(Object.values(AwsRegionEnum))
     .required(validationMessage('AWS_REGION', 'string'))
     .typeError(validationMessage('AWS_REGION', 'string')),
 });
 
-const awsDatabase = object().shape({
+const awsDatabaseSchema = object().shape({
   apiVersion: string()
     .required(validationMessage('AWS_DATABASE_API_VERSION', 'string'))
     .typeError(validationMessage('AWS_DATABASE_API_VERSION', 'string')),
@@ -26,14 +30,15 @@ const awsDatabase = object().shape({
     .typeError(validationMessage('AWS_DATABASE_ENDPOINT', 'string')),
 });
 
-const recipient = object().shape({
+const recipientSchema = object().shape({
   recipientEmails: array()
     .of(string().email())
     .min(1)
     .required(validationMessage('RECIPIENT_EMAIL', 'email string array separated via ","'))
     .typeError(validationMessage('RECIPIENT_EMAIL', 'email string array separated via ","')),
 });
-const mailer = object().shape({
+
+const mailerSchema = object().shape({
   senderEmail: string()
     .email()
     .required(validationMessage('SENDER_EMAIL', 'email string'))
@@ -43,11 +48,20 @@ const mailer = object().shape({
     .typeError(validationMessage('MAILER_AWS_API_VERSION', 'string')),
 });
 
+const deploymentSchema = object().shape({
+  prodDomain: string()
+    .required(validationMessage('DOMAIN', 'string'))
+    .typeError(validationMessage('DOMAIN', 'string')),
+  devDomain: string().typeError(validationMessage('DOMAIN_DEV', 'string')),
+  stage: string().oneOf(['stage', 'dev']).required(),
+});
+
 export const envSchema = object()
   .shape({
     aws: awsSchema,
-    awsDatabase: awsDatabase,
-    recipient: recipient,
-    mailer: mailer,
+    awsDatabase: awsDatabaseSchema,
+    recipient: recipientSchema,
+    mailer: mailerSchema,
+    deployment: deploymentSchema,
   })
   .noUnknown();
