@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 
+import { AwsRegionEnum } from './env.type';
 import { envSchema } from './schema';
 
 import type { IEnv } from './env.type';
@@ -27,7 +28,11 @@ const mapEnv = () => {
       apiVersion: process.env.AWS_API_VERSION,
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_API_REGION,
+      region: mapEnvValues.includes(
+        process.env.AWS_REGION,
+        Object.values(AwsRegionEnum),
+        AwsRegionEnum.euCentral1,
+      ) as AwsRegionEnum,
     },
     awsDatabase: {
       apiVersion: process.env.AWS_DATABASE_API_VERSION,
@@ -39,6 +44,11 @@ const mapEnv = () => {
     mailer: {
       senderEmail: process.env.SENDER_EMAIL,
       apiVersion: process.env.MAILER_AWS_API_VERSION,
+    },
+    deployment: {
+      prodDomain: process.env.DOMAIN,
+      devDomain: process.env.DOMAIN_DEV,
+      stage: process.env.STAGE,
     },
   };
   return Object.freeze(parsed);
