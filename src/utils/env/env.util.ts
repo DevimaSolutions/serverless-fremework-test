@@ -1,8 +1,9 @@
 import { config } from 'dotenv';
 
+import { AwsRegionEnum } from './env.type';
 import { envSchema } from './schema';
 
-import type { AwsRegionEnum, IEnv } from './env.type';
+import type { IEnv } from './env.type';
 
 config();
 const mapEnvValues = {
@@ -27,7 +28,11 @@ const mapEnv = () => {
       apiVersion: process.env.AWS_API_VERSION,
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION as AwsRegionEnum,
+      region: mapEnvValues.includes(
+        process.env.AWS_REGION,
+        Object.values(AwsRegionEnum),
+        AwsRegionEnum.euCentral1,
+      ) as AwsRegionEnum,
     },
     awsDatabase: {
       apiVersion: process.env.AWS_DATABASE_API_VERSION,
