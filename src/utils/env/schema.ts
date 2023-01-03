@@ -1,4 +1,4 @@
-import { object, array, string } from 'yup';
+import { object, array, string, boolean } from 'yup';
 
 import { AwsRegionEnum } from './env.type';
 
@@ -10,15 +10,15 @@ const awsSchema = object().shape({
     .required(validationMessage('AWS_API_VERSION', 'string'))
     .typeError(validationMessage('AWS_API_VERSION', 'string')),
   accessKeyId: string()
-    .required(validationMessage('AWS_ACCESS_KEY_ID', 'string'))
-    .typeError(validationMessage('AWS_ACCESS_KEY_ID', 'string')),
+    .required(validationMessage('AWS_API_ACCESS_KEY_ID', 'string'))
+    .typeError(validationMessage('AWS_API_ACCESS_KEY_ID', 'string')),
   secretAccessKey: string()
-    .required(validationMessage('AWS_SECRET_ACCESS_KEY', 'string'))
-    .typeError(validationMessage('AWS_SECRET_ACCESS_KEY', 'string')),
+    .required(validationMessage('AWS_API_SECRET_ACCESS_KEY', 'string'))
+    .typeError(validationMessage('AWS_API_SECRET_ACCESS_KEY', 'string')),
   region: string()
     .oneOf(Object.values(AwsRegionEnum))
-    .required(validationMessage('AWS_REGION', 'string'))
-    .typeError(validationMessage('AWS_REGION', 'string')),
+    .required(validationMessage('AWS_API_REGION', 'string'))
+    .typeError(validationMessage('AWS_API_REGION', 'string')),
 });
 
 const awsDatabaseSchema = object().shape({
@@ -28,6 +28,7 @@ const awsDatabaseSchema = object().shape({
   endpoint: string()
     .required(validationMessage('AWS_DATABASE_ENDPOINT', 'string'))
     .typeError(validationMessage('AWS_DATABASE_ENDPOINT', 'string')),
+  migrate: boolean().default(false),
 });
 
 const recipientSchema = object().shape({
@@ -53,7 +54,7 @@ const deploymentSchema = object().shape({
     .required(validationMessage('DOMAIN', 'string'))
     .typeError(validationMessage('DOMAIN', 'string')),
   devDomain: string().typeError(validationMessage('DOMAIN_DEV', 'string')),
-  stage: string().oneOf(['stage', 'dev']).required(),
+  stage: string().oneOf(['dev', 'prod']).required(),
 });
 
 export const envSchema = object()

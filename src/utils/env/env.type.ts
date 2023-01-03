@@ -42,6 +42,7 @@ export interface IAwsConfigs {
 export interface IAwsDatabaseConfigs {
   apiVersion: string;
   endpoint: string;
+  migrate: boolean;
 }
 export interface IRecipientConfigs {
   recipientEmails: string[];

@@ -14,9 +14,11 @@ import { reminderModel } from '@models';
 import { envUtil } from '@utils';
 import * as AWS from 'aws-sdk';
 
+import { environment } from './serverless.env';
+
 import type { AWS as awsType } from '@serverless/typescript';
 
-const { aws, deployment } = envUtil.getEnv();
+const { aws, awsDatabase, deployment } = envUtil.getEnv();
 
 AWS.config.update(aws);
 
@@ -33,16 +35,14 @@ const serverlessConfiguration: awsType = {
   provider: {
     name: 'aws',
     stage: deployment.stage,
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
     region: aws.region,
     apiGateway: {
       minimumCompressionSize: 512,
       shouldStartNameWithService: true,
     },
-    environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-    },
+    environment: environment,
+
     iamRoleStatements: [
       {
         Effect: 'Allow',
@@ -88,9 +88,9 @@ const serverlessConfiguration: awsType = {
       start: {
         port: 5000,
         inMemory: false,
-        migrate: true,
+        migrate: awsDatabase.migrate,
       },
-      stages: 'dev',
+      stages: deployment.stage,
     },
     documentation: {
       version: '1',
