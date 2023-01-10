@@ -1,7 +1,9 @@
-export interface IBaseAttributes {
+import type { AnyItem } from 'dynamoose/dist/Item';
+
+export interface IBaseAttributes extends AnyItem {
   id: string;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type IEntityToCreate<T> = T & IBaseAttributes;

@@ -10,7 +10,6 @@ import {
   baseSuccessModel,
 } from '@docs';
 import { reminderFunctions, scheduledFunctions } from '@functions';
-import { reminderModel } from '@models';
 import { envUtil } from '@utils';
 import * as AWS from 'aws-sdk';
 
@@ -26,12 +25,7 @@ const serverlessConfiguration: awsType = {
   service: 'reminders-api',
   frameworkVersion: '3',
 
-  plugins: [
-    'serverless-esbuild',
-    'serverless-dynamodb-local',
-    'serverless-offline',
-    'serverless-openapi-documenter',
-  ],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-openapi-documenter'],
   provider: {
     name: 'aws',
     stage: deployment.stage,
@@ -110,10 +104,6 @@ const serverlessConfiguration: awsType = {
   },
   functions: { ...reminderFunctions, ...scheduledFunctions },
   package: { individually: true },
-
-  resources: {
-    Resources: { ...reminderModel },
-  },
 };
 
 module.exports = serverlessConfiguration;

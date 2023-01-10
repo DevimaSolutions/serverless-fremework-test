@@ -7,10 +7,10 @@ export const environment = {
   NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 
   //Aws global configs
-  AWS_API_VERSION: aws.apiVersion,
-  AWS_API_ACCESS_KEY_ID: aws.accessKeyId,
-  AWS_API_SECRET_ACCESS_KEY: aws.secretAccessKey,
-  AWS_API_REGION: aws.region,
+  AWS_VERSION: aws.apiVersion,
+  AWS_ACCESS_KEY_ID: aws.accessKeyId,
+  AWS_SECRET_ACCESS_KEY: aws.secretAccessKey,
+  AWS_REGION: aws.region,
 
   //Aws database
   AWS_DATABASE_API_VERSION: awsDatabase.apiVersion,

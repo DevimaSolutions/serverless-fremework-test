@@ -1,5 +1,5 @@
 import { databaseConstants } from '@constants';
-import getDynamoDBClient from '@database';
+import { RemindersModel } from '@models';
 import { databaseUtil } from '@utils';
 
 import type { IRepositoryPaginated } from '@dto';
@@ -7,58 +7,32 @@ import type { IReminderAttributes } from '@entities';
 import type { ReminderTypeEnum } from '@enums';
 import type { ICursor } from 'database/types';
 
-const connection = getDynamoDBClient();
-
-const table = databaseConstants.databaseTablesName.reminders;
-
-const create = async (payload: IReminderAttributes) =>
-  connection
-    .put({
-      TableName: table,
-      Item: payload,
-    })
-    .promise();
+const create = async (payload: IReminderAttributes) => RemindersModel.create(payload);
 
 const update = async (reminderId: string, payload: Partial<IReminderAttributes>) =>
-  connection
-    .update({
-      TableName: table,
-      Key: { id: reminderId },
-      ...databaseUtil.getUpdatingMeta(payload),
-      ReturnValues: databaseConstants.databaseReturningType.allNew,
-    })
-    .promise();
+  RemindersModel.update({
+    reminderId,
+    ...databaseUtil.getUpdatingMeta(payload),
+  });
 
-const getOne = async (reminderId: string) =>
-  connection
-    .get({
-      TableName: table,
-      Key: { id: reminderId },
-    })
-    .promise();
+const getOne = async (reminderId: string) => RemindersModel.get(reminderId);
 
 const getList = async (
   type: ReminderTypeEnum,
   limit = 100,
   cursor?: ICursor | null,
 ): Promise<{ items: IReminderAttributes[]; cursor: ICursor }> => {
-  const params = {
-    TableName: table,
-    Limit: limit,
-    IndexName: databaseConstants.databaseIndexName.sortIndex,
-    KeyConditionExpression: 'reminderType = :reminderType',
-    ScanIndexForward: true,
-    ExpressionAttributeValues: {
-      ':reminderType': type,
-    },
-    ...(cursor ? { ExclusiveStartKey: cursor } : {}),
-  };
-
-  const result = await connection.query(params).promise();
+  const result = await RemindersModel.query('reminderType')
+    .eq(type)
+    .startAt(cursor)
+    .using(databaseConstants.databaseIndexName.sortIndex)
+    .limit(limit)
+    .sort('descending')
+    .exec();
 
   return {
-    items: result.Items as IReminderAttributes[],
-    cursor: result.LastEvaluatedKey,
+    items: result.length ? result : [],
+    cursor: result.lastKey ?? null,
   };
 };
 
@@ -67,32 +41,21 @@ const getListByTime = async (
   limit = 100,
   cursor?: ICursor | null,
 ): Promise<IRepositoryPaginated<IReminderAttributes[]>> => {
-  const queryParams = {
-    TableName: table,
-    IndexName: databaseConstants.databaseIndexName.timeIndex,
-    KeyConditionExpression: 'sendDate = :sendDate',
-    ExpressionAttributeValues: {
-      ':sendDate': sendKey,
-    },
-    Limit: limit,
-    ...(cursor ? { ExclusiveStartKey: cursor } : {}),
-  };
-
-  const result = await connection.query(queryParams).promise();
+  const result = await RemindersModel.query('sendDate')
+    .eq(sendKey)
+    .startAt(cursor)
+    .using(databaseConstants.databaseIndexName.timeIndex)
+    .limit(limit)
+    .sort('descending')
+    .exec();
 
   return {
-    items: result.Items as IReminderAttributes[],
-    cursor: result.LastEvaluatedKey,
+    items: result.length ? result : [],
+    cursor: result.lastKey ?? null,
   };
 };
 
-const deleteOneById = async (reminderId: string) =>
-  connection
-    .delete({
-      TableName: table,
-      Key: { id: reminderId },
-    })
-    .promise();
+const deleteOneById = async (reminderId: string) => RemindersModel.delete(reminderId);
 
 const remindersRepository = { create, update, getOne, deleteOneById, getList, getListByTime };
 

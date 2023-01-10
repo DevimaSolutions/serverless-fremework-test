@@ -25,11 +25,11 @@ const mapEnvValues = {
 const mapEnv = () => {
   const parsed: IEnv = {
     aws: {
-      apiVersion: process.env.AWS_API_VERSION,
-      accessKeyId: process.env.AWS_API_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_API_SECRET_ACCESS_KEY,
+      apiVersion: process.env.AWS_VERSION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       region: mapEnvValues.includes(
-        process.env.AWS_API_REGION,
+        process.env.AWS_REGION,
         Object.values(AwsRegionEnum),
         AwsRegionEnum.euCentral1,
       ) as AwsRegionEnum,

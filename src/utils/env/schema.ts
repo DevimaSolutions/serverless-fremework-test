@@ -7,18 +7,18 @@ const validationMessage = (field: string, type: string) =>
 
 const awsSchema = object().shape({
   apiVersion: string()
-    .required(validationMessage('AWS_API_VERSION', 'string'))
-    .typeError(validationMessage('AWS_API_VERSION', 'string')),
+    .required(validationMessage('AWS_VERSION', 'string'))
+    .typeError(validationMessage('AWS_VERSION', 'string')),
   accessKeyId: string()
-    .required(validationMessage('AWS_API_ACCESS_KEY_ID', 'string'))
-    .typeError(validationMessage('AWS_API_ACCESS_KEY_ID', 'string')),
+    .required(validationMessage('AWS_ACCESS_KEY_ID', 'string'))
+    .typeError(validationMessage('AWS_ACCESS_KEY_ID', 'string')),
   secretAccessKey: string()
-    .required(validationMessage('AWS_API_SECRET_ACCESS_KEY', 'string'))
-    .typeError(validationMessage('AWS_API_SECRET_ACCESS_KEY', 'string')),
+    .required(validationMessage('AWS_SECRET_ACCESS_KEY', 'string'))
+    .typeError(validationMessage('AWS_SECRET_ACCESS_KEY', 'string')),
   region: string()
     .oneOf(Object.values(AwsRegionEnum))
-    .required(validationMessage('AWS_API_REGION', 'string'))
-    .typeError(validationMessage('AWS_API_REGION', 'string')),
+    .required(validationMessage('AWS_REGION', 'string'))
+    .typeError(validationMessage('AWS_REGION', 'string')),
 });
 
 const awsDatabaseSchema = object().shape({

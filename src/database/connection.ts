@@ -1,24 +1,28 @@
 import { envUtil } from '@utils';
 import * as AWS from 'aws-sdk';
-
-import type { DocumentClient } from 'aws-sdk/clients/dynamodb';
-let connection: DocumentClient | null = null;
+import dynamoose from 'dynamoose';
 
 const env = envUtil.getEnv();
 
-const getDynamoDBClient = (): DocumentClient => {
-  if (connection) {
-    return connection;
-  }
+const { aws } = envUtil.getEnv();
+
+AWS.config.update(aws);
+
+const getDynamoDBClient = () => {
+  let ddb;
   if (process.env.IS_OFFLINE) {
-    return new AWS.DynamoDB.DocumentClient({
+    ddb = new dynamoose.aws.ddb.DynamoDB({
       ...env.aws,
       ...env.awsDatabase,
     });
   } else {
-    connection = new AWS.DynamoDB.DocumentClient();
+    ddb = new dynamoose.aws.ddb.DynamoDB({
+      ...env.aws,
+    });
   }
-  return connection;
+  dynamoose.aws.ddb.set(ddb);
+
+  return dynamoose;
 };
 
 export default getDynamoDBClient;
