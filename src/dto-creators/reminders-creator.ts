@@ -21,8 +21,8 @@ export const toDbObject = (reminder: ICreateReminderRequest): IReminderAttribute
   id: v4(),
   ...reminder,
   sendDate: timeUtil.getMinutelyTimeStamp(reminder.sendDate),
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
 });
 
 export const toDbUpdateObject = (
@@ -31,7 +31,7 @@ export const toDbUpdateObject = (
   ({
     ...reminder,
     ...(reminder.sendDate ? { sendDate: reminder.sendDate.getTime() } : {}),
-    updatedAt: Date.now(),
+    updatedAt: new Date(),
   } as Partial<IReminderAttributes>);
 
 export const toEmailObject = (recipients: string[], reminder: IReminderAttributes): IMail => ({

@@ -4,7 +4,7 @@ import connection from '../connection';
 
 import { baseDbIdSchema, baseDbTimestampsSchema } from './base.db.schema';
 
-import type { IReminderAttributes } from '@entities';
+import type { IReminder } from '@entities';
 
 const dynamoose = connection();
 
@@ -37,7 +37,7 @@ const reminderSchema = new dynamoose.Schema(
   baseDbTimestampsSchema,
 );
 
-const Reminder = dynamoose.model<IReminderAttributes>(
+const Reminder = dynamoose.model<IReminder>(
   databaseConstants.databaseTablesName.reminders,
   reminderSchema,
 );
